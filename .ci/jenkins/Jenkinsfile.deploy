@@ -126,32 +126,32 @@ pipeline {
             }
         }
 
-        stage('Build, Push & Test Images') {
-            steps {
-                script {
-                    dir(getRepoName()) {
-                        parallelStages = [:]
-                        getImages().each { image ->
-                            parallelStages["Build&Test ${image}"] = createBuildAndTestStageClosure(image)
-                        }
-                        parallel parallelStages
-                    }
-                }
-            }
-            post {
-                always {
-                    script {
-                        // Store image deployment information
-                        String imgPrefix = "${getRepoName()}.image"
-                        setDeployPropertyIfNeeded("${imgPrefix}.registry", getDeployImageRegistry())
-                        setDeployPropertyIfNeeded("${imgPrefix}.namespace", getDeployImageNamespace())
-                        setDeployPropertyIfNeeded("${imgPrefix}.names", getBuiltImages().join(','))
-                        setDeployPropertyIfNeeded("${imgPrefix}.name-suffix", getDeployImageNameSuffix())
-                        setDeployPropertyIfNeeded("${imgPrefix}.tag", getDeployImageTag())
-                    }
-                }
-            }
-        }
+        // stage('Build, Push & Test Images') {
+        //     steps {
+        //         script {
+        //             dir(getRepoName()) {
+        //                 parallelStages = [:]
+        //                 getImages().each { image ->
+        //                     parallelStages["Build&Test ${image}"] = createBuildAndTestStageClosure(image)
+        //                 }
+        //                 parallel parallelStages
+        //             }
+        //         }
+        //     }
+        //     post {
+        //         always {
+        //             script {
+        //                 // Store image deployment information
+        //                 String imgPrefix = "${getRepoName()}.image"
+        //                 setDeployPropertyIfNeeded("${imgPrefix}.registry", getDeployImageRegistry())
+        //                 setDeployPropertyIfNeeded("${imgPrefix}.namespace", getDeployImageNamespace())
+        //                 setDeployPropertyIfNeeded("${imgPrefix}.names", getBuiltImages().join(','))
+        //                 setDeployPropertyIfNeeded("${imgPrefix}.name-suffix", getDeployImageNameSuffix())
+        //                 setDeployPropertyIfNeeded("${imgPrefix}.tag", getDeployImageTag())
+        //             }
+        //         }
+        //     }
+        // }
 
         stage('Commit and Tag changes') {
             when {
